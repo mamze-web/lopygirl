@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lopy Girl | Interactive Portfolio</title>
+    <style>
+        /* [기존 스타일 유지 및 강화] */
+        body {
+            margin: 0; padding: 0;
+            font-family: 'Pretendard', sans-serif;
+            background-color: #ffffff; color: #1a1a1a;
+            overflow-x: hidden;
+        }
+
+        header {
+            height: 40vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            background-color: #f8f8f8; text-align: center;
+        }
+
+        header h1 { font-size: 3.5rem; letter-spacing: 8px; margin: 0; text-transform: uppercase; }
+        header p { font-size: 1rem; color: #666; letter-spacing: 2px; margin-top: 15px; }
+
+        .container { max-width: 1200px; margin: 50px auto; padding: 0 20px; }
+
+        /* 그리드 레이아웃 */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .work-item { cursor: pointer; transition: transform 0.3s ease; }
+        .work-item:hover { transform: translateY(-10px); }
+
+        .work-card {
+            width: 100%; aspect-ratio: 4 / 5;
+            background-color: #eee; overflow: hidden;
+            border-radius: 4px; /* 약간의 곡률로 세련미 추가 */
+        }
+
+        .work-card img { width: 100%; height: 100%; object-fit: cover; transition: scale 0.5s ease; }
+        .work-item:hover img { scale: 1.1; } /* 호버 시 이미지 확대 효과 */
+
+        .work-info { padding: 15px 0; }
+        .work-title { font-size: 1.2rem; margin: 0; }
+        .work-desc { font-size: 0.9rem; color: #888; margin-top: 5px; }
+
+        /* --- [핵심] 라이트박스(Lightbox) 스타일 --- */
+        #lightbox {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.9); /* 배경 어둡게 */
+            display: none; /* 기본은 숨김 */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            cursor: zoom-out;
+        }
+
+        #lightbox img {
+            max-width: 90%;
+            max-height: 80%;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        #lightbox.active { display: flex; }
+        #lightbox.active img { transform: scale(1); }
+
+        /* 라이트박스 하단 정보 */
+        .lightbox-caption {
+            position: absolute;
+            bottom: 40px;
+            color: white;
+            text-align: center;
+            width: 100%;
+        }
+
+        footer { text-align: center; padding: 50px; color: #aaa; font-size: 0.8rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>LOPY GIRL STUDIO</h1>
+        <p>The logic of lovely shape</p>
+    </header>
+
+    <div class="container">
+        <div class="portfolio-grid">
+            <!-- 작품 1 -->
+            <div class="work-item" onclick="openLightbox('img\\1art.jpg', 'Issue no.1', 'Paper Low Poly / 2026')">
+                <div class="work-card"><img src="img\1art.jpg" alt="Work 1"></div>
+                <div class="work-info">
+                    <h3 class="work-title">Issue no.1</h3>
+                    <p class="work-desc">Paper Low Poly Figure / 2026</p>
+                </div>
+            </div>
+
+            <!-- 작품 2 -->
+            <div class="work-item" onclick="openLightbox('img\\2art.jpg', 'Issue no.1', 'Paper Low Poly / 2026')">
+                <div class="work-card"><img src="img\2art.jpg" alt="Work 2"></div>
+                <div class="work-info">
+                    <h3 class="work-title">Issue no.1</h3>
+                    <p class="work-desc">Paper Low Poly Figure / 2026</p>
+                </div>
+            </div>
+
+            <!-- 작품 3 -->
+            <div class="work-item" onclick="openLightbox('img\\3art.jpg', 'Issue no.1', 'Paper Low Poly / 2026')">
+                <div class="work-card"><img src="img\3art.jpg" alt="Work 3"></div>
+                <div class="work-info">
+                    <h3 class="work-title">Issue no.1</h3>
+                    <p class="work-desc">Paper Low Poly Figure / 2026</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 라이트박스 구조 -->
+    <div id="lightbox" onclick="closeLightbox()">
+        <img id="lightbox-img" src="" alt="Enlarged view">
+        <div class="lightbox-caption">
+            <h2 id="lightbox-title" style="margin:0; font-size: 1.5rem;"></h2>
+            <p id="lightbox-desc" style="color: #ccc;"></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 LOPY GIRL. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // [핵심] 인터랙티브 자바스크립트 기능
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const lightboxTitle = document.getElementById('lightbox-title');
+        const lightboxDesc = document.getElementById('lightbox-desc');
+
+        // 라이트박스 열기 함수
+        function openLightbox(src, title, desc) {
+            lightboxImg.src = src; // 큰 이미지 경로 설정
+            lightboxTitle.innerText = title;
+            lightboxDesc.innerText = desc;
+            lightbox.classList.add('active');
+            document.body.style.overflow = 'hidden'; // 배경 스크롤 방지
+        }
+
+        // 라이트박스 닫기 함수
+        function closeLightbox() {
+            lightbox.classList.remove('active');
+            document.body.style.overflow = 'auto'; // 스크롤 복구
+        }
+    </script>
+
+</body>
+</html>
